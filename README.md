@@ -118,7 +118,7 @@
 2. Create AppMesh resources in AWS using YAML manifests
 
     ```
-    kubectl apply -f yelb-mesh.yml
+    kubectl apply -f https://raw.githubusercontent.com/saiteja313/learning-appmesh/master/yelb-mesh.yml
 
     kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-yelb-redis.yaml
 
@@ -148,7 +148,7 @@ kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/mas
 2. Create a new Deployment in EKS
 
 ```
-kubectl apply -f yelb_appserver_v2_deployment.yml
+kubectl apply -f https://raw.githubusercontent.com/saiteja313/learning-appmesh/master/yelb_appserver_v2_deployment.yml
 ```
 
 1. Update Virtual Route in AppMesh to send 50% traffic to new Deployment
