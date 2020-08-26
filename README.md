@@ -39,6 +39,7 @@
     ```
     curl -o pre_upgrade_check.sh https://raw.githubusercontent.com/aws/eks-charts/master/stable/appmesh-controller/upgrade/pre_upgrade_check.sh
 
+    chmod +x ./pre_upgrade_check.sh
     ./pre_upgrade_check.sh
     ```
 
