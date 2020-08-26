@@ -52,6 +52,7 @@
 3. Deploy AppMesh Controller
 
     ```
+    export AWS_REGION=us-east-2
     helm upgrade -i appmesh-controller eks/appmesh-controller \
     --namespace appmesh-system \
     --set region=$AWS_REGION \
