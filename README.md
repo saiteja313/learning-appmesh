@@ -70,6 +70,8 @@
 
     ```
     export AWS_REGION=us-east-2
+    
+    helm repo add eks https://aws.github.io/eks-charts
 
     helm upgrade -i appmesh-controller eks/appmesh-controller \
     --namespace appmesh-system \
