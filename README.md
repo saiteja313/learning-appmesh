@@ -22,9 +22,21 @@
     eksctl create cluster --name appmesh-l3 --managed --region us-east-2
     ```
 
-3. Install [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+3. List worker node IAM role ARN
 
-4. Install [Helm](https://docs.aws.amazon.com/eks/latest/userguide/helm.html)
+    ```
+    eksctl get iamidentitymapping --cluster appmesh-l3
+    ```
+
+4. Add AppMesh policy to worker node role ARN
+
+    ```
+    aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AWSAppMeshFullAccess --policy-arn <POLICY_ARN_FROM_STEP_NOT_THE_ARN>
+    ```
+
+5. Install [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+
+6. Install [Helm](https://docs.aws.amazon.com/eks/latest/userguide/helm.html)
 
     ```
     curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
@@ -48,23 +60,28 @@
     ```
     kubectl apply -k "https://github.com/aws/eks-charts/stable/appmesh-controller/crds?ref=master"
     ```
+3. Create `appmesh-system` namespace
 
-3. Deploy AppMesh Controller
+    ```
+    kubectl create namespace appmesh-system
+    ```
+
+4. Deploy AppMesh Controller
 
     ```
     export AWS_REGION=us-east-2
+
     helm upgrade -i appmesh-controller eks/appmesh-controller \
     --namespace appmesh-system \
     --set region=$AWS_REGION \
-    --set serviceAccount.create=false \
+    --set serviceAccount.create=true \
     --set serviceAccount.name=appmesh-controller
     ```
-- Confirm Controller version
+
+5. Validate AppMesh Controller pod is in 'Running' status
 
     ```
-    kubectl get deployment appmesh-controller \
-    -n appmesh-system \
-    -o json  | jq -r ".spec.template.spec.containers[].image" | cut -f2 -d ':'
+    kubectl get pods -n appmesh-system
     ```
 
 
@@ -96,28 +113,27 @@
     kubectl label namespace yelb appmesh.k8s.aws/sidecarInjectorWebhook=enabled
     ```
 
-2. Create Mesh in AWS AppMesh using below manifest
-
-```
-cat <<"EOF" > /tmp/eks-scripts/yelb-mesh.yml
-apiVersion: appmesh.k8s.aws/v1beta2
-kind: Mesh
-metadata:
-  name: yelb
-spec:
-  namespaceSelector:
-    matchLabels:
-      mesh: yelb
-EOF
-```
-
-3. Create AppMesh resources in AWS by deploying YAML manifests in Kubernetes
+2. Create AppMesh resources in AWS using YAML manifests
 
     ```
-    kubectl apply -f https://github.com/aws/aws-app-mesh-examples/tree/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates
+    kubectl apply -f yelb-mesh.yml
+
+    kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-yelb-redis.yaml
+
+    kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-yelb-db.yaml
+
+    kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-yelb-appserver.yaml
+
+    kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-yelb-ui.yaml
     ```
 
-4. Application pods should be restarted with Envoy side car containers.
+3. Re-deploy Yelb application
+
+    ```
+    kubectl delete -f delete_yelb_initial_deployment.yaml
+
+    kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/yelb_initial_deployment.yaml
+    ```
 
 ### Rolling update deployment for Yelb application
 
@@ -133,8 +149,14 @@ kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/mas
 kubectl apply -f yelb_appserver_v2_deployment.yml
 ```
 
-3. Update Virtual Route in AppMesh to point with new Deployment
+1. Update Virtual Route in AppMesh to send 50% traffic to new Deployment
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-virtual-router-appserver-v1-v2.yaml
 ```
+
+2. Update Virtual Route in AppMesh to send 100% traffic to new Deployment
+
+    ```
+    kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-virtual-router-appserver-v2.yaml
+    ```
