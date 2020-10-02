@@ -77,7 +77,8 @@
     --namespace appmesh-system \
     --set region=$AWS_REGION \
     --set serviceAccount.create=true \
-    --set serviceAccount.name=appmesh-controller
+    --set serviceAccount.name=appmesh-controller \
+    --set sidecar.logLevel=error
     ```
 
 5. Validate AppMesh Controller pod is in 'Running' status
