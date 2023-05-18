@@ -68,7 +68,28 @@
     --approve
     ```
 
-4. Deploy AppMesh Controller
+4. Download IAM Policy and create policy
+
+    ```
+    curl -o controller-iam-policy.json https://raw.githubusercontent.com/aws/aws-app-mesh-controller-for-k8s/master/config/iam/controller-iam-policy.json
+    
+    aws iam create-policy \
+        --policy-name AWSAppMeshK8sControllerIAMPolicy \
+        --policy-document file://controller-iam-policy.json
+    ```
+    
+5. Create Service Account
+
+    ```
+    eksctl create iamserviceaccount --cluster $CLUSTER_NAME \
+        --namespace appmesh-system \
+        --name appmesh-controller \
+        --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/AWSAppMeshK8sControllerIAMPolicy  \
+        --override-existing-serviceaccounts \
+        --approve
+    ```
+
+6. Deploy AppMesh Controller
 
     ```
     export AWS_REGION=us-east-2
@@ -83,7 +104,7 @@
     --set sidecar.logLevel=error
     ```
 
-5. Validate AppMesh Controller pod is in 'Running' status
+7. Validate AppMesh Controller pod is in 'Running' status
 
     ```
     kubectl get pods -n appmesh-system
@@ -164,26 +185,4 @@ kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/mas
 
     ```
     kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-virtual-router-appserver-v2.yaml
-    ```
-    
-### IRSA
-
-1. Download IAM Policy and create policy
-
-    ```
-    curl -o controller-iam-policy.json https://raw.githubusercontent.com/aws/aws-app-mesh-controller-for-k8s/master/config/iam/controller-iam-policy.json
-    
-    aws iam create-policy \
-        --policy-name AWSAppMeshK8sControllerIAMPolicy \
-        --policy-document file://controller-iam-policy.json
-    ```
-2. Create Service Account
-
-    ```
-    eksctl create iamserviceaccount --cluster $CLUSTER_NAME \
-        --namespace appmesh-system \
-        --name appmesh-controller \
-        --attach-policy-arn arn:aws:iam::$AWS_ACCOUNT_ID:policy/AWSAppMeshK8sControllerIAMPolicy  \
-        --override-existing-serviceaccounts \
-        --approve
     ```
