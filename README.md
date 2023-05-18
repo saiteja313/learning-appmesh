@@ -60,7 +60,15 @@
     kubectl create namespace appmesh-system
     ```
 
-3. Deploy AppMesh Controller
+3. Enable IAM OIDC provider on EKS Cluster
+
+    ```
+    eksctl utils associate-iam-oidc-provider --region=$AWS_REGION \
+    --cluster=$CLUSTER_NAME \
+    --approve
+    ```
+
+4. Deploy AppMesh Controller
 
     ```
     export AWS_REGION=us-east-2
@@ -75,7 +83,7 @@
     --set sidecar.logLevel=error
     ```
 
-4. Validate AppMesh Controller pod is in 'Running' status
+5. Validate AppMesh Controller pod is in 'Running' status
 
     ```
     kubectl get pods -n appmesh-system
