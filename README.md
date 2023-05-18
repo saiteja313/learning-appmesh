@@ -48,27 +48,18 @@
 
 ### AppMesh integration with EKS
 
-1. Execute `pre_upgrade_check.sh` script
-
-    ```
-    curl -o pre_upgrade_check.sh https://raw.githubusercontent.com/aws/eks-charts/master/stable/appmesh-controller/upgrade/pre_upgrade_check.sh
-
-    chmod +x ./pre_upgrade_check.sh
-    ./pre_upgrade_check.sh
-    ```
-
-2. Deploy AppMesh Custom Resource Definitions (CRD's)
+1. Deploy AppMesh Custom Resource Definitions (CRD's)
 
     ```
     kubectl apply -k "https://github.com/aws/eks-charts/stable/appmesh-controller/crds?ref=master"
     ```
-3. Create `appmesh-system` namespace
+2. Create `appmesh-system` namespace
 
     ```
     kubectl create namespace appmesh-system
     ```
 
-4. Deploy AppMesh Controller
+3. Deploy AppMesh Controller
 
     ```
     export AWS_REGION=us-east-2
@@ -83,7 +74,7 @@
     --set sidecar.logLevel=error
     ```
 
-5. Validate AppMesh Controller pod is in 'Running' status
+4. Validate AppMesh Controller pod is in 'Running' status
 
     ```
     kubectl get pods -n appmesh-system
