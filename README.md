@@ -33,7 +33,7 @@
 4. Add AppMesh policy to worker node role ARN
 
     ```
-    aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AWSAppMeshFullAccess --role-name <POLICY_ARN_FROM_STEP_NOT_THE_ARN>
+    aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AWSAppMeshFullAccess --role-name <ROLE_NAME_FROM_PREVIOUS_STEP>
     ```
 
 5. Install [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
