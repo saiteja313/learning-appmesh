@@ -21,6 +21,7 @@
     ```
     export AWS_REGION="us-east-2"
     export AWS_DEFAULT_REGION="us-east-2"
+    export CLUSTER_NAME="appmesh-l3"
     eksctl create cluster --name appmesh-l3 --managed --region us-east-2
     ```
 
