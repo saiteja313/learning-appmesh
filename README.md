@@ -106,7 +106,7 @@
     helm upgrade -i appmesh-controller eks/appmesh-controller \
     --namespace appmesh-system \
     --set region=$AWS_REGION \
-    --set serviceAccount.create=true \
+    --set serviceAccount.create=false \
     --set serviceAccount.name=appmesh-controller \
     --set sidecar.logLevel=error
     ```
