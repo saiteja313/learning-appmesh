@@ -14,32 +14,39 @@
     git clone https://github.com/saiteja313/learning-appmesh.git
     ```
 
-2. Create EKS cluster
+2. Install jq
+
+    ```
+    brew install jq -y
+    ```
+
+3. Create EKS cluster
 
 - [Install ekctl](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
 
     ```
     export AWS_REGION="us-east-2"
     export AWS_DEFAULT_REGION="us-east-2"
+    export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
     export CLUSTER_NAME="appmesh-l3"
     eksctl create cluster --name appmesh-l3 --managed --region us-east-2
     ```
 
-3. List worker node IAM role ARN
+4. List worker node IAM role ARN
 
     ```
     eksctl get iamidentitymapping --cluster appmesh-l3
     ```
 
-4. Add AppMesh policy to worker node role ARN
+5. Add AppMesh policy to worker node role ARN
 
     ```
     aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AWSAppMeshFullAccess --role-name <ROLE_NAME_FROM_PREVIOUS_STEP>
     ```
 
-5. Install [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
+6. Install [kubectl](https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html)
 
-6. Install [Helm](https://docs.aws.amazon.com/eks/latest/userguide/helm.html)
+7. Install [Helm](https://docs.aws.amazon.com/eks/latest/userguide/helm.html)
 
     ```
     export KUBBECONFIG="~/.kube/config"
