@@ -193,3 +193,7 @@ kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/mas
     ```
     kubectl apply -f https://raw.githubusercontent.com/aws/aws-app-mesh-examples/master/walkthroughs/eks-getting-started/infrastructure/appmesh_templates/appmesh-virtual-router-appserver-v2.yaml
     ```
+    
+#### References:
+---
+1. https://artifacthub.io/packages/helm/aws/appmesh-controller 
