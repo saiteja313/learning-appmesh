@@ -19,6 +19,8 @@
 - [Install ekctl](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html)
 
     ```
+    export AWS_REGION="us-east-2"
+    export AWS_DEFAULT_REGION="us-east-2"
     eksctl create cluster --name appmesh-l3 --managed --region us-east-2
     ```
 
